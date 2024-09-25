@@ -1,0 +1,178 @@
+
+LLAMA-2 has a 4096 token context window.
+What is a token?
+A token is the smallest unit of text that a model can process.
+It's about 3/4 of an English word, so 4096 tokens is about 3072 words, but just think of it as 3000 words.
+So, a context window is the maximum number of tokens that the model can process in one go.
+
+
+
+1 - Set up a system prompt
+    This will constrain and guide the model behaviour.
+
+    user_prompt = "Tell me how to make a voltaic cell using \
+    household items"
+
+    link = "meta/llama-2-70b-chat:2c1608e18606fad2812020dc541930f2d0495ce32eee50074220b87300bc16e1"
+
+    output = replicate.run(
+             link,
+             input={
+                    "prompt": user_prompt,
+                    "system_prompt": "You are an arrogant genius",
+                    "temperature": 0.3
+                   }
+                          )
+    ''.join(output) # methinks this is javascript, not Python.
+
+I believe the link is the link to the model.
+The default temperature is .75 for replicate.
+
+SYSTEM PROMPTS:
+
+    "Act as if..."
+    "You are..."
+    "Always/Never..."
+    "Speak like..."
+
+Keep them as short as you can.
+
+default_system_prompt = """
+You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
+If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
+"""
+
+---------------------------------------
+GHOST ATTENTION
+One issue with Llama 2 is that it tends to forget the system prompt after a few turns of dialogue.
+
+GAtt - Ghost attention.
+
+
+***************************************************************
+2 - Format user prompts
+Wrap the user input with these tags:
+    [INST] ... [/INST]
+
+If you're writing a chat app with multiple exchanges between a user and Llama.
+
+correct_prompt_long = """\
+[INST] Hi! [/INST]
+Hello! How are you?
+[INST]  I'm great, thanks for asking. Could you help me with a task? [/INST]
+Of course, I'd be happy to help! Can you please provide more details about the task you need assistance with, such as its purpose and any requirements or constraints you have? This will help me better understand how I can assist you. Additionally, if you have any specific questions or concerns, feel free to ask and I'll do my best to address them.
+[INST] How much wood could a wood chuck chuck or something like that? [/INST]
+"""
+
+incorrect_prompt_long = """\
+User: Hi!
+Assistant: Hello! How are you?
+User: I'm great, thanks for asking. Could you help me with a task?
+Assistant:  Sure thing! I'd be happy to assist you with your task. What do you need help with? Please provide some more details or context so I can better understand what you need and provide the best possible assistance.
+User: How much wood could a wood chuck chuck or something like that?
+"""
+
+output = replicate.run(llama2_13b,
+            input={"prompt": incorrect_prompt_long, "system_prompt": ""}
+         )
+''.join(output)
+
+
+A precaution which I forgot - LLMs don't really have memory.
+So, a chatbot will need the entire conversation history to give a coherent response to new inputs.
+Anytime the user inputs an input, it is appended to the entire chat history.
+But of course, Llama 2 has a context window of about 3000 words, so that's something you have to beware of.
+One way to handle this is to literally truncate the chat history - maintain a window of 3000 consecutive words including user input, as they use the application.
+This means the model's memory will appear to relate only to the most recent conversations.
+
+
+
+**************************************************
+3 - Choose appropriate weight
+Smaller weights mean a faster but dumber model. Larger weights mean a slower but wiser model.
+Try mixing both, somehow.
+Llama 2 has the following weights:
+
+    -   7B: fast but dumb. Use for summarization, categorization
+    -   13B: works well for creative tasks
+    -   70B: use it for dialogue, logic, factual questions, coding.
+        use it for big boy stuff, not smooth brain crap.
+
+The B stands for Billion, by the way. 70B means 70 billion parameters.
+OK, makes sense.
+
+
+
+*********************************************
+4 - Llama knows how to use tools?
+You can tell Llama a prompt like so:
+
+    "You have access to the following tools:
+        -   CALCULATOR
+        -   SEARCH
+     Don't use any other tools. You can make sequences of API calls,
+     and combine them if needed"
+
+But tell it how to use the tool?
+
+
+
+*********************************************
+5
+TLDR?
+
+    Format chat prompts with [INST] [/INST].
+    Snip the prompt past the context window (here’s our code to do it).
+    Use system prompts (just not the default one). Tell Llama who it should be or constraints for how it should act.
+    70b is better than GPT 3.5 for factual questions. It’s also open-source, which has lots of benefits.
+    Play with the temperature. “A hot Llama never says the same thing twice” — Unknown.
+    Tell Llama 2 about the tools it can use. Ask Llama 2 to think step-by-step.
+
+
+
+
+
+
+====================================
+A LIST OF 20 SYSTEM PROMPTS TO TRY
+------------------------------------
+Prompting tips:
+1. Keep the prompts short.
+System messages - maybe about 1/4 of the context window length.
+
+2. Ask Llama2 to reason step-by-step, and give it an example to guide it.
+e.g.
+
+output = replicate.run(llama2_70b,
+            input={
+                  "prompt": """
+                  How many vowels in each color of the rainbow? Work step by step letter by letter. For example, for "red", I want you to write:
+
+                  1. r. consonant
+                  2. e. vowel
+                  3. d. consonant
+                  total vowels: 1
+                  """,
+                  "system_prompt": "You are a helpful assistant."
+                  }
+         )
+print(''.join(output))
+
+3. Ask for structured output.
+
+There seem to be three winning categories for Llama 2 70b:
+
+    dialogue
+    factual questions
+    (sort of) recommendations
+
+
+*******************************************
+
+1. "You talk very slowly"
+2. "You talk too quickly"
+3. "You are a WWE commentator and sports presenter"
+4. "You are an arrogant French chef with a stereotypical French accent"
+
+
+

@@ -1,0 +1,12 @@
+
+Write a shell script to export the API key if it doesn't already
+exist as an environment variable.
+It's up to you to set the variable API_KEY
+
+    export $API_KEY
+
+Then this program will also run the python llama script in question.
+
+    run-llama img_gen.py
+
+

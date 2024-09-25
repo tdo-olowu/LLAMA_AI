@@ -1,0 +1,109 @@
+
+"""
+replicate is the open-source library used to access llama2's api
+it's called a client for the api
+    pip install replicate
+"""
+
+
+"""
+generate an API token at https://replicate.com/account/api-tokens
+then copy it and inside your shell, set it as an env variable.
+    export REPLICATE_API_TOKEN=r0_ejnnw0e8n08en2i029nasjnk
+the token could be similar gibberish.
+It will now be accessible within your script
+"""
+
+
+
+"""
+run a public model
+You can find all the public models here:
+    https://replicate.com/explore
+The below code runs the black-forest-labs/flux-schnell model, in order
+to generate an image of an iguana on the beach, pointilism.
+It returns the URL of the image. Btw, try improving the code by downloading or displaying the image.
+"""
+
+import replicate
+ 
+output = replicate.run(
+  "black-forest-labs/flux-schnell",
+  input={"prompt": "an iguana on the beach, pointillism"}
+)
+print(output)
+ 
+# ['https://replicate.delivery/yhqm/hqSsNRHBbr7qJtsQoEgZ7zPPTfgnxjPU8EIaRfimlT4av7dTA/out-0.jpg']
+
+
+
+"""
+using local files as inputs
+Suppose you have a file named 'my_fridge.jpg', which is a binary image file.
+"""
+image = open("my_fridge.jpg", "rb")
+output = replicate.run(
+    "yorickvp/llava-13b:a0fdc44e4f2e1f20f2bb4e27846899953ac8e66c5886c5878fa1d6b73ce009e5",
+    input={
+        "image": image,
+        "prompt": "Here's what's in my fridge. What can I make for dinner tonight?"
+    }
+)
+
+print(output)
+
+# You have a well-stocked refrigerator filled with various fruits, vegetables, and ...
+
+
+
+"""
+Using URLs as input 
+"""
+
+image = "https://example.com/my_fridge.jpg"
+output = replicate.run(
+    "yorickvp/llava-13b:a0fdc44e4f2e1f20f2bb4e27846899953ac8e66c5886c5878fa1d6b73ce009e5",
+    input={
+        "image": image,
+        "prompt": "Here's what's in my fridge. What can I make for dinner tonight?"
+    }
+)
+print(output)
+# You have a well-stocked refrigerator filled with various fruits, vegetables, and ...
+
+
+
+"""
+Handling streams as output.
+Some models, such as the mistralai blah blah below stream output as the model is running.
+"""
+iterator = replicate.run(
+  "mistralai/mixtral-8x7b-instruct-v0.1",
+  input={"prompt": "Who was Dolly the sheep?"},
+)
+for text in iterator:
+      print(text)
+
+"""
+      🐑
+      D
+     olly
+      the
+      sheep
+      was
+      the
+      first
+      mamm
+     al
+      to
+      be
+      successfully
+      cl
+     oned
+      from
+      an
+      adult
+      cell
+     ...
+"""
+
