@@ -9,7 +9,7 @@ it's called a client for the api
 """
 generate an API token at https://replicate.com/account/api-tokens
 then copy it and inside your shell, set it as an env variable.
-    export REPLICATE_API_TOKEN=r0_ejnnw0e8n08en2i029nasjnk
+    export REPLICATE_API_TOKEN=r0_blahblah
 the token could be similar gibberish.
 It will now be accessible within your script
 """
