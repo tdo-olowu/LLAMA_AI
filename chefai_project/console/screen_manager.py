@@ -5,3 +5,6 @@ SCREEN MANAGER
 Manages the terminal screen.
 Will clear the screen, etc. Anytime we evaluate we clear screen, etc.:
 """
+
+class ScreenManager:
+    pass
