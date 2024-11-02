@@ -1,0 +1,86 @@
+Here I will briefly describe the architecture of the Chefbot.
+
+It consists of eight main modules:
+	-	Input processor
+	-	Input validator
+	-	Reasoning model
+	-	Memory/history
+	-	Error handler
+	-	Output processor
+	-	Output validator
+	-	Application
+
+What are these?
+INPUT VALIDATOR
+	This checks if the input is valid.
+For example, if the input is related to cooking/cusisine.
+If the input is valid, then it is passed to the Input Processor.
+If the input is invalid, then the Error handler is invoked appropriately.
+
+
+INPUT PROCESSOR
+	This processes the input.
+What this means is that it puts the input in a form that the Reasoning Model is
+best suited to handling. It just "cleans up" the user input/prompt.
+
+
+REASONING MODEL
+	This handles the implementation of the response generation.
+This component essentially represents the "brain" of ChefAI.
+Currently, I intend to use Replicate to implement this, but I hope to abstract the details enough,
+that nearly any Generative AI model would do.
+For now, there should be no way for the user to control the "Temperature" directly.
+The nature of the prompt should suggest what Temperature to use.
+
+
+OUTPUT VALIDATOR
+	Once a response has been generated, the Output Validator makes sure the response is...
+"clean", "appropriate", or "accurate".
+Currently I'm thinking of using some Python library, or just the Generative Model itself as an evaluator.
+If the output is appropriate, then it is sent to the Output Processor.
+If the output is inappropriate, then it is sent to Error Handler
+
+
+ERROR HANDLER
+	I know it's almost a god class, if not explicitly a god class...
+But for now, it's here to stay. The error handler handles all sorts of miscellaneous errors that may
+arise during input parsing, response generation, output processing, etc.
+
+
+MEMORY
+	This keeps track of the conversation so far in the thread.
+Memory will help in maintaining context, somehow. It has only one job - track the history of prompts and responses, and that will be mixed with the next prompt.
+
+
+CONSOLE/APPLICATION
+	So far, ChefAI is a command-line application.
+This component controls the "gameloop". It's yet another god class, but for now we'll manage it.
+It is responsible for configuring the settings during startup (e.g. loading previous chats, etc),
+for controlling the run of the program, and exiting it safely.
+This version of ChefAI is just a prototype, so I'll tolerate this god class.
+Anyway, I want the application to be interactive.
+When the user starts it up like "./chefai.py", the program will welcome the user then display a list of previous chats, which are saved somewhere in the cwd.
+The user will then type the name of the chat they want to open, or they will start a new chat entirely.
+Upon exit, the user should be taken to the main screen (the one with all the previous chats saved).
+The user can exit this too, in order to close the program, type exit again.
+
+
+
+================================================
+HOW THE APPLICATION WORKS
+
+Tempting as it is to focus on the interactivity, let's just get something that works for now, even if it's clunky to use.
+
+The user starts the application by simply typing "./chefai.py" in the command line.
+Then they are greeted by a blank screen.
+They will enter a prompt - ChefAI is a virtual chef whose ability is the power to make delicious recipes given any edible ingredients. Delicious, healthy, safe.
+ChefAI can make a five-star meal out of zero-star ingredients!
+So, the user will prompt ChefAI to "cook something up" given the ingredients.
+ChefAI will see if the request is meaningful.
+If it is, ChefAI will grant the request and give the user a list of anywhere from two to three distinct recipes, in recipe format.
+ChefAI will pretend to be making/have made the meal.
+He will explain in steps how he accomplished each step, as well as any difficulties faced and how he overcame them.
+Think of ChefAI as an all-time Iron Chef.
+So, once ChefAI is done responding, the user may exit the program or ask for another recipe.
+
+That's the first variant. 

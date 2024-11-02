@@ -1,0 +1,38 @@
+
+
+I will use an object-oriented approach.
+First, what will be the concept I try to abstract as a class?
+
+A Virtual chef, aka Chefbot.
+Use an agent-based systems approach to model the thing.
+So...
+An Agent is situated in an Environment.
+Here, the environment is just streams of input text from the user, and output text from the Chefbot itself.
+
+We need a Perception system.
+The Chefbot should be able to "See", then take "Action" when it sees.
+The "see" function is the Chefbot's ability to observe its environment.
+The "action" function represents the Chefbot's decision-making process.
+The output of "see" is a Percept?
+An internal data structure is used to record information about the environment state and history.
+This will represent all Internal states.
+
+    see: Environment ----> Percept
+
+A percept is just what the agent "senses"/"perceives".
+
+    action: Percept ----> Actions
+    action: InternalState ----> Actions
+
+Next function:
+Maps (Internal State, Perception) to Internal State.
+
+
+
+
+
+
+
+
+
+
