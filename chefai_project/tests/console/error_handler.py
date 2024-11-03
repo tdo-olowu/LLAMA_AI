@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-CHAT MANAGER
+ERROR HANDLER
 """
 
-class ChatManager:
+class ErrorHandler:
     pass

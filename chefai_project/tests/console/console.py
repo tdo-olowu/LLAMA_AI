@@ -4,10 +4,10 @@
 CHEFAI CONSOLE - this may end up being the entry point
 """
 
-from MenuManager import MenuManager
-from ScreenManager import ScreenManager
-from CommandProcessor import CommandProcessor
-from ErrorHandler import ErrorHandler
+from menu_manager import MenuManager
+from screen_manager import ScreenManager
+from command_processor import CommandProcessor
+from error_handler import ErrorHandler
 
 
 def main():
