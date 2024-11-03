@@ -45,6 +45,7 @@ class ScreenManager:
         # input("Press Enter to continue")
 
     def _outro(self):
+        self._clear_screen()
         print(ScreenManager.outro_screen)
 
     def _set_color(self):

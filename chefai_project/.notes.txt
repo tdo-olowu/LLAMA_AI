@@ -1,0 +1,27 @@
+The `@classmethod` decorator in Python allows a method to operate on the class itself rather than on an instance of the class. This means that `@classmethod` methods can access or modify class-level attributes (like `_all_menus` in your `MenuManager` class) directly without requiring an instance of `MenuManager` to be created.
+
+### Why `@classmethod` is Useful Here
+
+In your `MenuManager` design, the menus are fixed and represented by a class-level attribute (`_all_menus`). Since `MenuManager` is only used for retrieving this predefined data and doesn't need to store any instance-specific data, you can use `@classmethod` methods to directly access `_all_menus` at the class level. This eliminates the need to create individual instances of `MenuManager` to perform basic lookups, making your code cleaner and more efficient.
+
+For example:
+```python
+menu_options = MenuManager.get_menu('main_menu')
+```
+
+### Benefits of Using `@classmethod`
+1. **Direct Access to Class-Level Data**: You don’t need to instantiate `MenuManager` to call `get_menu` or `get_option`.
+2. **Single Source of Truth**: The menus are shared across all potential instances and can be accessed directly by the class, preventing accidental changes.
+3. **Intentional Design Choice**: Using `@classmethod` signals that this method is only meant to interact with class-level data, emphasizing that `MenuManager` is not meant to be instantiated or carry instance-specific data.
+
+### Could You Avoid Using `@classmethod`?
+
+Yes, but it would require instantiating `MenuManager` each time you need access to the menus:
+```python
+manager = MenuManager()
+menu_options = manager.get_menu('main_menu')
+```
+
+This works, but creates unnecessary instances just for data access. Without `@classmethod`, you would also lose the clear distinction that these methods operate at the class level, which might be confusing to future readers or collaborators.
+
+In short, `@classmethod` is both a performance optimization (avoiding unnecessary instances) and a design signal that `MenuManager` is used for fixed, class-level data access.
