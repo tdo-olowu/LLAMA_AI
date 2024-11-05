@@ -18,10 +18,12 @@ def main():
 
     screen_manager.setup_screen()
     active = True
+    # initialize the main menu somewhere here.
+    menu = menu_manager._main_menu # this is a class attr so fix the code
     while active:
         try:
             # the main menu is the first menu
-            menu_choice = menu_manager.display_main_menu()
+            menu_choice = menu_manager.get_user_choice()
             # think of this as its own inner loop
             command_processor.process_command(menu_choice)
         except Exception as e:
